@@ -20,3 +20,10 @@
 ---
 
 ### Ответ
+yum install ufw -y
+sudo enable ufw
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw default deny incoming
+sudo ufw allow ssh
+sudo ufw status
