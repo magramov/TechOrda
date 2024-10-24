@@ -10,3 +10,40 @@
 6. Учетка `design` не должна иметь доступ на другие пути, тоже самое касается других учеток.
 
 ---
+ответ:
+server {
+    listen 8080;
+    server_name example.com;
+
+    # Обработка корневого пути "/"
+    location / {
+        root /var/lib/nginx/index.html;
+        index index.html;
+    }
+
+    # Обработка пути "/images" с авторизацией для учетной записи "design"
+    location /images {
+        root /var/lib/nginx/cats/;
+        auth_basic "Restricted Area";
+        auth_basic_user_file /etc/nginx/.htpasswd_design;
+    }
+
+    # Обработка пути "/gifs" с авторизацией для учетной записи "marketing"
+    location /gifs {
+        root /var/lib/nginx/gifs;
+        auth_basic "Restricted Area";
+        auth_basic_user_file /etc/nginx/.htpasswd_marketing;
+    }
+
+    # Запрет для учетной записи "design" на доступ к другим путям
+    location ~ ^/(gifs|any_other_paths) {
+        auth_basic "Access Denied";
+        auth_basic_user_file /etc/nginx/.htpasswd_marketing;
+    }
+
+    # Запрет для учетной записи "marketing" на доступ к "/images"
+    location ~ ^/images {
+        auth_basic "Access Denied";
+        auth_basic_user_file /etc/nginx/.htpasswd_design;
+    }
+}
