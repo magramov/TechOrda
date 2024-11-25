@@ -1,0 +1,18 @@
+---
+- name: Установка и настройка nginx
+  hosts: lb
+  become: yes
+
+  tasks:
+    - name: Установить nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Запустить и включить nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
